@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+        }
+
+        canvas {
+            border: 1px solid #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="pixelCanvas" width="1080" height="1080"></canvas>
+
+    <script>
+        const canvas = document.getElementById('pixelCanvas');
+        const ctx = canvas.getContext('2d');
+        const pixelSize = 4;
+        const gridSize = canvas.width / pixelSize;
+
+        const pixels = new Array(gridSize).fill().map(() => new Array(gridSize).fill('#FFFFFF'));
+
+        canvas.addEventListener('mousedown', handleCanvasClick);
+
+        function drawPixels() {
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    ctx.fillStyle = pixels[y][x];
+                    ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+                }
+            }
+        }
+
+        function handleCanvasClick(event) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            const pixelX = Math.floor(mouseX / pixelSize);
+            const pixelY = Math.floor(mouseY / pixelSize);
+
+            // Set the color of the clicked pixel
+            pixels[pixelY][pixelX] = getRandomColor();
+
+            // Redraw the pixels
+            drawPixels();
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 18)];
+            }
+            return color;
+        }
+
+        // Initial drawing
+        drawPixels();
+    </script>
+</body>
+</html>
